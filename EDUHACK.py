@@ -9,7 +9,7 @@ from PIL import ImageTk
 MODELO_CHAT = "gpt-3.5-turbo"
 MODELO_IMAGENES = "dall-e-3"
 
-client = OpenAI(api_key="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")
+client = OpenAI(api_key="")
 
 
 class Chat:
@@ -310,6 +310,5 @@ if __name__ == "__main__":
     # TODO: TEXTO MAS GRANDE Y QUE CAMBIE DE LINEA
 
     # TODO CHAT: QUE HAGA SCROLL AUTOMATICO
-
 
     root.mainloop()
