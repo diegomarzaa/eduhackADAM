@@ -7,11 +7,12 @@ from io import BytesIO
 from PIL import ImageTk
 from configparser import ConfigParser
 
-
 MODELO_CHAT = "gpt-3.5-turbo"
 MODELO_IMAGENES = "dall-e-3"
 
 # CLAVE
+# AQUÍ TIENES QUE PONER TU PROPIA
+
 config = ConfigParser()
 config.read("config.ini")
 secret_key = config.get('Credenciales', 'openai_api_key')
@@ -121,9 +122,7 @@ class Chat:
     def create_image_prompt(self):
         """
         Crea un prompt para generar una imagen a partir de la última respuesta del asistente.
-        TODO: hacer bien
         """
-
         # Mostramos los primeros 10 caracteres
         print("\n######## Creando prompt de el siguiente concepto: " + self.last_response[:10] + "...")
 
@@ -186,12 +185,12 @@ class Chat:
         print("Image added to window.")
 
 
-    # CUESTIONARIO
 
     def create_questions_from_prompt(self, prompt="Abejas"):
         """
         Crea un cuestionario a partir de un prompt.
         """
+
         print("Generando cuestionario...")
         self.messages.append({"role": "user", "content": prompt})
 
@@ -207,6 +206,7 @@ class Chat:
     
 
     def put_questions_in_window(self, questions, window):
+
         # Si ya hay cuestionario, lo borramos
         for child in window.winfo_children():
             child.destroy()
@@ -291,10 +291,5 @@ if __name__ == "__main__":
     cuestionario_window.title("Preguntas")
     cuestionario_window.geometry("500x500+20+100")
     cuestionario_window.resizable(width=tk.FALSE, height=tk.FALSE)
-
-
-    # TODO: TEXTO MAS GRANDE Y QUE CAMBIE DE LINEA
-
-    # TODO CHAT: QUE HAGA SCROLL AUTOMATICO
 
     root.mainloop()
