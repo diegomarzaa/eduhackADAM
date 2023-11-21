@@ -5,11 +5,17 @@ import requests
 from PIL import Image
 from io import BytesIO
 from PIL import ImageTk
+from configparser import ConfigParser
+
 
 MODELO_CHAT = "gpt-3.5-turbo"
 MODELO_IMAGENES = "dall-e-3"
 
-client = OpenAI(api_key="")
+# CLAVE
+config = ConfigParser()
+config.read("config.ini")
+secret_key = config.get('Credenciales', 'openai_api_key')
+client = OpenAI(api_key=secret_key)
 
 
 class Chat:
@@ -118,41 +124,44 @@ class Chat:
         TODO: hacer bien
         """
 
-        print("Creando prompt de el siguiente concepto: " + self.last_response)
+        # Mostramos los primeros 10 caracteres
+        print("\n######## Creando prompt de el siguiente concepto: " + self.last_response[:10] + "...")
 
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are a image prompt creator"},
-                {"role": "user", "content": "Create a super simple prompt to generate a image of the next concept: " + self.last_response}
+                {"role": "user", "content": "Create a detailed prompt for an image based on the next concept, be concise and only show the prompt: " + self.last_response}
             ],
             max_tokens=500,
         )
 
         prompt = response.choices[0].message.content
-        print("Prompt created:", prompt)
+        # Remove newlines
+        prompt = prompt.replace("\n", "")
+        print("\n######### Prompt creado:", prompt)
         return prompt
 
         
 
     def create_image_from_prompt(self, prompt):
-        # TODO
         print("Generando imagen...")
         response_image = client.images.generate(
-            # TODO PONER BIEN
             model=MODELO_IMAGENES,   # dall-e-2, dall-e-3
             prompt=prompt,   # See revised_prompt # I NEED to test how the tool works with extremely simple prompts. DO NOT add any detail, just use it AS-IS
-            size="1024x1024", # 1024x1024, 1024x1792 or 1792x1024
+            size="1024x1024", # 256x256, 1024x1024, 1024x1792 or 1792x1024
             # quality="standard", # standard, hd
             n=1,  # In dalle2, you can add up to 10
             # style= "vivid" # vivid, natural     # Only for dalle3
         )
+        print("Imagen generada.")
         
         image_url = response_image.data[0].url
         response = requests.get(image_url)
         img = Image.open(BytesIO(response.content))
         while True:
             try:
+                # Save in a subfolder in the same directory
                 name = prompt + ".png"
                 img.save(name)
                 break
@@ -233,29 +242,6 @@ class Chat:
         cuestionario_chat.put_questions_in_window(questions, cuestionario_window)
 
         self.clear_data()
-
-
-    def send_message_and_wait(self, user_input, chat_history_square):
-        if not self.chatting:
-            self.chatting = True
-            print("The chat is now running.")
-            user_message = user_input.get()
-            user_input.delete(0, tk.END)
-            self.user_input = user_message
-            self.messages.append({"role": "user", "content": self.user_input})
-            self.get_chat_response(user_message, chat_history_square)
-            self.chatting = False
-        else:
-            print("The chat is already running.")
-    def chat_history_to_mainbox(self, chat_history_square):
-        for message in self.messages:
-            if message["role"] == "user":
-                chat_history_square.insert(tk.END, "Usuario: " + message["content"] + "\n")
-            elif message["role"] == "assistant":
-                chat_history_square.insert(tk.END, "Assistant: " + message["content"] + "\n")
-    
-
-
 
 
 if __name__ == "__main__":
