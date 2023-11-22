@@ -10,11 +10,14 @@ from configparser import ConfigParser
 MODELO_CHAT = "gpt-3.5-turbo"
 MODELO_IMAGENES = "dall-e-3"
 
-# CLAVE
-# AQUÍ TIENES QUE PONER TU PROPIA
+# API KEY
 
-api = input("Enter your API key: ")
-api = api.strip()
+api = ""  # Put your API key here if you don't want to be asked every time, keep the "".
+
+if api = "":
+    api = input("Enter your API key: ")
+    api = api.strip()
+
 client = OpenAI(api_key=api)
 
 
