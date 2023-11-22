@@ -14,7 +14,7 @@ MODELO_IMAGENES = "dall-e-3"
 
 api = ""  # Put your API key here if you don't want to be asked every time, keep the "".
 
-if api = "":
+if api == "":
     api = input("Enter your API key: ")
     api = api.strip()
 
