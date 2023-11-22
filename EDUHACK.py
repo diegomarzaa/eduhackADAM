@@ -13,10 +13,9 @@ MODELO_IMAGENES = "dall-e-3"
 # CLAVE
 # AQUÍ TIENES QUE PONER TU PROPIA
 
-config = ConfigParser()
-config.read("config.ini")
-secret_key = config.get('Credenciales', 'openai_api_key')
-client = OpenAI(api_key=secret_key)
+api = input("Enter your API key: ")
+api = api.strip()
+client = OpenAI(api_key=api)
 
 
 class Chat:
